@@ -4,9 +4,13 @@ As with other languages like C and C++, Rust programmes can accept command line 
 
 This repo shows some options for handling command line arguments in Rust.
 
+Different Implementations
+-------------------------
+Switch between Git branches to see different implementations. For example, the `simple-main` branch shows an implementation in which main does not return a `Result`.
+
 Separation of Concerns
 ----------------------
-The `main` function should not ibe burdened with too many tasks. It cannot be tested directly, so it shouldn't contain programme logic.
+The `main` function should not be burdened with too many tasks. It cannot be tested directly, so it shouldn't contain programme logic.
 
 There is a Rust community guideline for separation of concerns when `main` gets large:
 
