@@ -1,12 +1,16 @@
 use std::env;
 use std::fs;
 
-// https://doc.rust-lang.org/book/ch12-03-improving-error-handling-and-modularity.html
+/// Example showing `main()` returning a Result type.
+/// In this case, errors are printed to stdout in the format:
+/// `Error: "message"`. The quotation marks look a bit odd.
+/// When the function returns an error, the exit value of the
+/// programme is 1.
 fn main() -> Result<(), &'static str> {
     let args: Vec<String> = env::args().collect();
     let config = match Config::new(&args) {
         Ok(config) => config,
-        Err(e) => return Err(e),
+        Err(e) => return Err(e), // Error: "Please supply 2 arguments."
     };
 
     println!("Query: {}", config.query);
