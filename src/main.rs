@@ -1,12 +1,19 @@
 use std::env;
 use std::fs;
+use std::process;
 
-// https://doc.rust-lang.org/book/ch12-03-improving-error-handling-and-modularity.html
-fn main() -> Result<(), &'static str> {
+/// The `main()` function in this branch does not return a
+/// `Result` type. If the `Config::new()` call returns an error,
+/// `process::exit(1)` terminates the programme with an exit
+/// value of 1. The explanatory message is very clean.
+fn main() {
     let args: Vec<String> = env::args().collect();
     let config = match Config::new(&args) {
         Ok(config) => config,
-        Err(e) => return Err(e),
+        Err(e) => {
+            println!("Problem parsing arguments: {}", e);
+            process::exit(1)
+        },
     };
 
     println!("Query: {}", config.query);
@@ -14,7 +21,6 @@ fn main() -> Result<(), &'static str> {
     let contents = fs::read_to_string(config.filename)
         .expect("File didn't open properly");
     println!("Text:\n{}", contents);
-    Ok(())
 }
 
 struct Config {
