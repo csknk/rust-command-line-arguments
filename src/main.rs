@@ -1,23 +1,18 @@
 use std::env;
 use std::fs;
+use std::process;
 
-/// Example showing `main()` returning a Result type.
-/// In this case, errors are printed to stdout in the format:
-/// `Error: "message"`. The quotation marks look a bit odd.
-/// When the function returns an error, the exit value of the
-/// programme is 1.
+/// Unwrap the return value from `Config::new()` using `unwrap_or_else()`.
+/// If the incorrect number of arguments are provided, the programme returns an exit value of 1,
+/// achieved using `process::exit(1)`.
 fn main() -> Result<(), &'static str> {
     let args: Vec<String> = env::args().collect();
-    let config = match Config::new(&args) {
-        Ok(config) => config,
-        Err(e) => return Err(e), // Error: "Please supply 2 arguments."
-    };
-
-    println!("Query: {}", config.query);
-    println!("Opening {}", config.filename);
-    let contents = fs::read_to_string(config.filename)
-        .expect("File didn't open properly");
-    println!("Text:\n{}", contents);
+    let config = Config::new(&args)
+        .unwrap_or_else(|err| {
+            println!("Problem parsing arguments: {}", err);
+            process::exit(1);
+        });
+    run(config);
     Ok(())
 }
 
@@ -47,6 +42,13 @@ impl Config {
         let filename = args[2].clone();
         Ok(Config { query, filename })
     }
+}
+
+fn run(config: Config) {
+    println!("The query is {}", config.query);
+    let contents = fs::read_to_string(config.filename)
+        .expect("Didn't open file properly...");
+    println!("Text:\n{}", contents);
 }
 
 //fn read_file() {}
